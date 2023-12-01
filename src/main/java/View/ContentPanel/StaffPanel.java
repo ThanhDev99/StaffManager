@@ -230,9 +230,15 @@ public class StaffPanel extends JPanel {
                             String[] messageSplit = mes.split(",");
 
                             if (messageSplit[0].equals("update-online-list")) {
-                                String[] onlineSplit = messageSplit[1].split("-");
-                                for (int i = 0; i < onlineSplit.length; i++) {
-                                    onlineList.add(onlineSplit[i]);
+                                if (messageSplit[1].equals("-")) {
+                                    for (String s : onlineList) {
+                                        if (s.equals(messageSplit[2])) {
+                                            onlineList.remove(s);
+                                        }
+                                    }
+                                }
+                                if (messageSplit[1].equals("+")) {
+                                    onlineList.add(messageSplit[2]);
                                 }
                                 updateTable();
                             }
