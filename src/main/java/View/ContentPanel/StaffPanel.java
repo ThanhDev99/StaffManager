@@ -1,6 +1,7 @@
 package View.ContentPanel;
 
 import Controller.ChatController;
+import Controller.CheckInController;
 import Model.ShareData;
 import View.MainFrame;
 
@@ -27,7 +28,7 @@ public class StaffPanel extends JPanel {
     private BufferedReader is;
     private BufferedWriter os;
     private Socket socketClient;
-    private ChatController controller;
+    private CheckInController controller;
     private String id;
     private List<String> onlineList;
     private MainFrame mainFrame;
@@ -44,7 +45,7 @@ public class StaffPanel extends JPanel {
 
         this.id = ShareData.account.getStaffId();
 
-        controller = new ChatController();
+        controller = new CheckInController();
 
         setBackground(new Color(126, 102, 215));
 
@@ -230,11 +231,6 @@ public class StaffPanel extends JPanel {
                             String[] messageSplit = mes.split(",");
 
                             if (messageSplit[0].equals("update-online-list")) {
-                                onlineList.clear();
-                                String[] online = messageSplit[1].split("-");
-                                for (int i = 0; i < online.length; i++) {
-                                    onlineList.add(online[i]);
-                                }
                                 updateTable();
                             }
                             if (messageSplit[0].equals("global-message")) {
@@ -255,6 +251,10 @@ public class StaffPanel extends JPanel {
         }
     }
     private void updateTable() {
+        onlineList.clear();
+
+        onlineList = controller.getCheckin(ShareData.account.getStaffId());
+
         while (tblModelOnline.getRowCount() > 0) {
             tblModelOnline.removeRow(0);
         }

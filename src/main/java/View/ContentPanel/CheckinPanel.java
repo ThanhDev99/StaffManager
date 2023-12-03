@@ -1,7 +1,11 @@
 package View.ContentPanel;
 
+import Controller.CheckInController;
+import Model.ShareData;
 import View.Help.RoundBorderLabel;
 import View.MainFrame;
+import View.MainPanel;
+import com.sun.tools.javac.Main;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -13,13 +17,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CheckinPanel extends JPanel {
-    private MainFrame mainFrame;
+    private CheckInController controller;
+    private MainPanel mainPanel;
     private GridBagConstraints constraints = new GridBagConstraints();
     private Font fontSystem = new Font("Cambria", Font.BOLD, 16);
     private RoundBorderLabel lblTime;
     private JButton btnCheckIn, btnCheckOut;
     private JLabel lblCheckIn, lblCheckOut, lblDate;
-    public CheckinPanel() {
+    public CheckinPanel(MainPanel mainPanel) {
+        controller = new CheckInController();
+
+        this.mainPanel = mainPanel;
+
         setBackground(new Color(126, 102, 215));
 
         setBorder(new MatteBorder(0, 2, 0, 0, Color.BLACK));
@@ -38,7 +47,7 @@ public class CheckinPanel extends JPanel {
         constraints.insets = new Insets(20, 0, 0, 0);
         add(lblTime, constraints);
         lblTime.setPreferredSize(new Dimension(200, 200));
-        lblTime.setFont(new Font("Cambria", Font.BOLD, 40));
+        lblTime.setFont(new Font("Cambria", Font.BOLD, 30));
         lblTime.setForeground(new Color(0, 255, 20, 255));
 
         lblDate = new JLabel("");
@@ -110,7 +119,7 @@ public class CheckinPanel extends JPanel {
     }
     private void time() {
         new Timer(1000, new ActionListener() {
-            SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a");
             SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -120,11 +129,21 @@ public class CheckinPanel extends JPanel {
         }).start();
     }
     private void getBtnCheckIn() {
-        SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a");
         lblCheckIn.setText(formatTime.format(new Date()));
+
+        mainPanel.lblTask.setEnabled(true);
+        mainPanel.lblRequest.setEnabled(true);
+        mainPanel.lblStaff.setEnabled(true);
+        mainPanel.lblStaffManager.setEnabled(true);
+        mainPanel.lblStatistical.setEnabled(true);
+        mainPanel.lblAccount.setEnabled(true);
+        mainPanel.lblAdmin.setEnabled(true);
+
+        controller.setCheckIn(ShareData.account.getStaffId());
     }
     private void getBtnCheckOut() {
-        SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a");
         lblCheckOut.setText(formatTime.format(new Date()));
     }
 }

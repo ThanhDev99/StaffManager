@@ -24,4 +24,8 @@ public class Staff {
     private Boolean sex;
     private String birthday;
     private String image;
+
+    private String time;
+    private String note;
+    private String isCheckin;
 }

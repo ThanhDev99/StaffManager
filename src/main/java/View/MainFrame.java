@@ -1,12 +1,19 @@
 package View;
 
+import Controller.CheckInController;
+import Model.ShareData;
+import View.Help.Dialog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class MainFrame extends JFrame {
+    private CheckInController controller;
     private int xOffset, yOffset;
     public MainFrame() {
+        controller = new CheckInController();
+
         createFrame();
     }
     private void createFrame() {
@@ -40,6 +47,19 @@ public class MainFrame extends JFrame {
                 int y = e.getYOnScreen() - yOffset;
 
                 setLocation(x, y);
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (Dialog.showComfirmDialogWithAutoClose("Bạn chắc muốn thoát chương trình?")) {
+                    controller.setCheckOut(ShareData.account.getStaffId());
+
+                    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                } else {
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
             }
         });
 

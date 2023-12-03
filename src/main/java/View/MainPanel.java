@@ -1,6 +1,7 @@
 package View;
 
 import Controller.AccountController;
+import Controller.CheckInController;
 import Model.Account;
 import Model.ShareData;
 import View.ContentPanel.*;
@@ -16,12 +17,13 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
 public class MainPanel extends JPanel {
+    private CheckInController checkInController;
     private AccountController controller;
     private MainFrame mainFrame;
     private GridBagConstraints constraints = new GridBagConstraints();
     private Font fontSystem = new Font("Cambria", Font.BOLD, 16);
     private CardLayout cardLayout = new CardLayout();
-    private JLabel lblName, lblCheckin, lblTask, lblRequest, lblStaff, lblStaffManager
+    public JLabel lblName, lblCheckin, lblTask, lblRequest, lblStaff, lblStaffManager
             , lblStatistical, lblAccount, lblAdmin, lblChat;
     private JPanel contentPanel;
     private String account;
@@ -32,6 +34,8 @@ public class MainPanel extends JPanel {
         this.account = account;
 
         controller = new AccountController();
+
+        checkInController = new CheckInController();
 
         loadDataAccount();
 
@@ -79,7 +83,7 @@ public class MainPanel extends JPanel {
         lblName.setFont(fontSystem);
 
         if (ShareData.account.getCheckIn()) {
-            CheckinPanel checkIn = new CheckinPanel();
+            CheckinPanel checkIn = new CheckinPanel(this);
             contentPanel.add(checkIn, "CheckIn");
 
             lblCheckin = new JLabel("Điểm danh", JLabel.CENTER);
@@ -137,6 +141,7 @@ public class MainPanel extends JPanel {
                     lblTask.setBackground(new Color(255, 255, 255));
                 }
             });
+            lblTask.setEnabled(false);
         } else {
             number += 1;
         }
@@ -168,6 +173,7 @@ public class MainPanel extends JPanel {
                     lblRequest.setBackground(new Color(255, 255, 255));
                 }
             });
+            lblRequest.setEnabled(false);
         } else {
             number += 1;
         }
@@ -199,6 +205,7 @@ public class MainPanel extends JPanel {
                     lblStaff.setBackground(new Color(255, 255, 255));
                 }
             });
+            lblStaff.setEnabled(false);
         } else {
             number += 1;
         }
@@ -230,6 +237,7 @@ public class MainPanel extends JPanel {
                     lblStaffManager.setBackground(new Color(255, 255, 255));
                 }
             });
+            lblStaffManager.setEnabled(false);
         } else {
             number += 1;
         }
@@ -261,6 +269,7 @@ public class MainPanel extends JPanel {
                     lblStatistical.setBackground(new Color(255, 255, 255));
                 }
             });
+            lblStatistical.setEnabled(false);
         } else {
             number += 1;
         }
@@ -292,6 +301,7 @@ public class MainPanel extends JPanel {
                     lblAccount.setBackground(new Color(255, 255, 255));
                 }
             });
+            lblAccount.setEnabled(false);
         } else {
             number += 1;
         }
@@ -323,40 +333,41 @@ public class MainPanel extends JPanel {
                     lblAdmin.setBackground(new Color(255, 255, 255));
                 }
             });
+            lblAdmin.setEnabled(false);
         } else {
             number += 1;
         }
 
-        if (ShareData.account.getChat()) {
-//            ChatPanel chatPanel = new ChatPanel(null, null, null);
-//            contentPanel.add(chatPanel, "Chat");
-
-            lblChat = new JLabel("Tin nhắn", JLabel.CENTER);
-            constraints.gridx = 0;
-            constraints.gridy = 10;
-            servicePanel.add(lblChat, constraints);
-            lblChat.setFont(fontSystem);
-            lblChat.setPreferredSize(new Dimension(150, 40));
-            lblChat.setBorder(new CompoundBorder(new BevelBorder(1), new BevelBorder(0)));
-            lblChat.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    cardLayout.show(contentPanel, "Chat");
-                }
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    lblChat.setForeground(new Color(0, 16, 255));
-                    lblChat.setBackground(new Color(0,0,0));
-                }
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    lblChat.setForeground(new Color(0,0,0));
-                    lblChat.setBackground(new Color(255, 255, 255));
-                }
-            });
-        } else {
-            number += 1;
-        }
+//        if (ShareData.account.getChat()) {
+////            ChatPanel chatPanel = new ChatPanel(null, null, null);
+////            contentPanel.add(chatPanel, "Chat");
+//
+//            lblChat = new JLabel("Tin nhắn", JLabel.CENTER);
+//            constraints.gridx = 0;
+//            constraints.gridy = 10;
+//            servicePanel.add(lblChat, constraints);
+//            lblChat.setFont(fontSystem);
+//            lblChat.setPreferredSize(new Dimension(150, 40));
+//            lblChat.setBorder(new CompoundBorder(new BevelBorder(1), new BevelBorder(0)));
+//            lblChat.addMouseListener(new MouseAdapter() {
+//                @Override
+//                public void mouseClicked(MouseEvent e) {
+//                    cardLayout.show(contentPanel, "Chat");
+//                }
+//                @Override
+//                public void mouseEntered(MouseEvent e) {
+//                    lblChat.setForeground(new Color(0, 16, 255));
+//                    lblChat.setBackground(new Color(0,0,0));
+//                }
+//                @Override
+//                public void mouseExited(MouseEvent e) {
+//                    lblChat.setForeground(new Color(0,0,0));
+//                    lblChat.setBackground(new Color(255, 255, 255));
+//                }
+//            });
+//        } else {
+//            number += 1;
+//        }
 
         JLabel lblLogout = new JLabel("Đăng xuất", JLabel.CENTER);
         constraints.gridx = 0;
@@ -413,6 +424,8 @@ public class MainPanel extends JPanel {
     }
     private void getLblLogout() {
         if (Dialog.showComfirmDialogWithAutoClose("Bạn có chắc muốn đăng xuất?")) {
+            checkInController.setCheckOut(ShareData.account.getStaffId());
+
             try {
                 FileOutputStream fos = new FileOutputStream("data/Account.dat");
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
