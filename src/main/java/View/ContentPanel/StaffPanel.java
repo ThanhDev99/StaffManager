@@ -58,8 +58,6 @@ public class StaffPanel extends JPanel {
         createGUI();
 
         setUpSocket();
-
-        updateTable();
     }
     private void createGUI() {
         createListPanel();
