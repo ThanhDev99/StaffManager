@@ -229,7 +229,21 @@ public class StaffPanel extends JPanel {
                             String[] messageSplit = mes.split(",");
 
                             if (messageSplit[0].equals("update-online-list")) {
-                                updateTable();
+                                String[] online = messageSplit[1].split("-");
+
+                                onlineList.clear();
+
+                                for (int i = 0; i < online.length; i++) {
+                                    onlineList.add(online[i]);
+                                }
+
+                                while (tblModelOnline.getRowCount() > 0) {
+                                    tblModelOnline.removeRow(0);
+                                }
+                                for (String s : onlineList) {
+                                    tblModelOnline.addRow(new String[]{s});
+                                }
+
                             }
                             if (messageSplit[0].equals("global-message")) {
                                 txtHistory.setText(txtHistory.getText() + messageSplit[1] + "\n");
@@ -246,18 +260,6 @@ public class StaffPanel extends JPanel {
             thread.start();
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
-    private void updateTable() {
-        onlineList.clear();
-
-        onlineList = controller.getCheckin(ShareData.account.getStaffId());
-
-        while (tblModelOnline.getRowCount() > 0) {
-            tblModelOnline.removeRow(0);
-        }
-        for (String s : onlineList) {
-            tblModelOnline.addRow(new String[]{s});
         }
     }
 }

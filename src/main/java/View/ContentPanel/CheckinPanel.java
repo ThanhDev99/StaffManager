@@ -13,10 +13,15 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CheckinPanel extends JPanel {
+    private BufferedWriter os;
+    private Socket socketClient;
     private CheckInController controller;
     private MainPanel mainPanel;
     private GridBagConstraints constraints = new GridBagConstraints();
@@ -150,12 +155,28 @@ public class CheckinPanel extends JPanel {
         if (ShareData.account.getAdmin()) {
             mainPanel.lblAdmin.setEnabled(true);
         }
-        
 
         controller.setCheckIn(ShareData.account.getStaffId());
+
+        try {
+            socketClient = new Socket("localhost", 7777);
+
+            os = new BufferedWriter(new OutputStreamWriter(socketClient.getOutputStream()));
+
+            write("checkin," + ShareData.account.getStaffId());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     private void getBtnCheckOut() {
         SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a");
         lblCheckOut.setText(formatTime.format(new Date()));
+    }
+    private void write (String mes) throws IOException {
+        os.write(mes);
+        os.newLine();
+        os.flush();
     }
 }
