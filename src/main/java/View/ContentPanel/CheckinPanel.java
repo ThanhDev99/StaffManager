@@ -135,10 +135,22 @@ public class CheckinPanel extends JPanel {
         mainPanel.lblTask.setEnabled(true);
         mainPanel.lblRequest.setEnabled(true);
         mainPanel.lblStaff.setEnabled(true);
-        mainPanel.lblStaffManager.setEnabled(true);
-        mainPanel.lblStatistical.setEnabled(true);
-        mainPanel.lblAccount.setEnabled(true);
-        mainPanel.lblAdmin.setEnabled(true);
+        if (ShareData.account.getStaffManager()) {
+            mainPanel.lblStaffManager.setEnabled(true);
+        }
+        
+        if (ShareData.account.getStatistical()) {
+            mainPanel.lblStatistical.setEnabled(true);
+        }
+        
+        if (ShareData.account.getAccount()) {
+            mainPanel.lblAccount.setEnabled(true);
+        }
+        
+        if (ShareData.account.getAdmin()) {
+            mainPanel.lblAdmin.setEnabled(true);
+        }
+        
 
         controller.setCheckIn(ShareData.account.getStaffId());
     }

@@ -2,6 +2,7 @@ package View;
 
 import Controller.AccountController;
 import Model.Account;
+import Model.ShareData;
 import View.Help.Dialog;
 import View.SecondFrame.ForgetPasswordFrame;
 
@@ -183,6 +184,7 @@ public class LoginPanel extends JPanel {
             Dialog.showMessageDialogWithAutoClose("Mật khẩu bạn nhập không đúng.", 0);
         } else if (result.equals("YES")) {
             Dialog.showMessageDialogWithAutoClose("Đăng nhập thành công.", 1);
+            ShareData.account.setStaffId(account);
 
             checkRememberPassword(account, password);
 
